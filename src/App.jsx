@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useInView } from 'framer-motion';
-import { Palette, Type, Grid3X3, ArrowRight, MousePointer2 } from 'lucide-react';
+import { Palette, Type, Grid3X3, ArrowRight, MousePointer2, Eye, X } from 'lucide-react';
 import './App.css';
 
 const LOGOS = [
@@ -62,7 +62,62 @@ const LOGOS = [
   }
 ];
 
-const Section = ({ logo, setActiveId, showToast }) => {
+const Modal = ({ isOpen, onClose, logo }) => {
+  if (!isOpen || !logo) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="modal-overlay"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.8, opacity: 0, y: 20 }}
+          className="modal-content glass"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button className="modal-close" onClick={onClose} style={{ color: logo.color }}>
+            <X size={24} />
+          </button>
+          
+          <div className="modal-body">
+            <div className="modal-logo-container" style={{ borderColor: `${logo.color}30` }}>
+              <div className="grid-bg"></div>
+              <motion.img 
+                src={logo.logoUrl} 
+                alt={logo.name} 
+                layoutId={`logo-${logo.id}`}
+                className="modal-large-logo"
+              />
+            </div>
+            
+            <div className="modal-info">
+              <span className="tag" style={{ color: logo.color }}>Détails du Logo</span>
+              <h2>{logo.fullName}</h2>
+              <div className="modal-specs">
+                <div className="spec-item">
+                  <span className="spec-label">Format</span>
+                  <span className="spec-value">Vectoriel / PNG HD</span>
+                </div>
+                <div className="spec-item">
+                  <span className="spec-label">Couleur</span>
+                  <span className="spec-value">{logo.color}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: 0.5 });
 
@@ -81,9 +136,17 @@ const Section = ({ logo, setActiveId, showToast }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            className="logo-display"
+            className="logo-display clickable"
+            onClick={() => onLogoClick(logo)}
           >
-            <img src={logo.logoUrl} alt={logo.name} />
+            <div className="view-badge" style={{ backgroundColor: logo.color }}>
+              <Eye size={14} color="white" />
+            </div>
+            <motion.img 
+              layoutId={`logo-${logo.id}`}
+              src={logo.logoUrl} 
+              alt={logo.name} 
+            />
           </motion.div>
 
           <motion.div
@@ -204,6 +267,7 @@ const Section = ({ logo, setActiveId, showToast }) => {
 export default function App() {
   const [activeId, setActiveId] = useState('home');
   const [toast, setToast] = useState(null);
+  const [selectedLogo, setSelectedLogo] = useState(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 40, damping: 25, restDelta: 0.001 });
 
@@ -332,9 +396,16 @@ export default function App() {
             logo={logo}
             setActiveId={setActiveId}
             showToast={showToast}
+            onLogoClick={setSelectedLogo}
           />
         ))}
       </main>
+
+      <Modal 
+        isOpen={!!selectedLogo} 
+        onClose={() => setSelectedLogo(null)} 
+        logo={selectedLogo} 
+      />
 
       <AnimatePresence>
         {toast && (
