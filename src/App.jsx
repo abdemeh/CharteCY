@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useInView } from 'framer-motion';
-import { Palette, Type, Grid3X3, ArrowRight, MousePointer2, Eye, X } from 'lucide-react';
+import { Palette, Type, Grid3X3, ArrowRight, MousePointer2, Eye, X, Copy, Check } from 'lucide-react';
 import './App.css';
 
 const LOGOS = [
@@ -8,9 +8,9 @@ const LOGOS = [
     id: 'icc',
     name: 'ICC',
     fullName: 'Ingénierie Cloud Computing',
-    color: '#3B82F6',
-    secondaryColor: '#1d4ed8',
-    lightColor: '#e0f2fe',
+    color: '#5599ff',
+    secondaryColor: '#2563eb',
+    lightColor: '#eff6ff',
     description: 'Conçu pour l\'avenir de l\'infrastructure cloud. ICC représente l\'évolutivité, la fiabilité et la puissance informatique moderne.',
     logoUrl: 'ICC%20Logo.png',
     sketchUrl: 'ICC_Sketch.png',
@@ -23,9 +23,9 @@ const LOGOS = [
     id: 'ia',
     name: 'IA',
     fullName: 'Intelligence Artificielle',
-    color: '#10B981',
-    secondaryColor: '#047857',
-    lightColor: '#dcfce7',
+    color: '#1f883b',
+    secondaryColor: '#14532d',
+    lightColor: '#f0fdf4',
     description: 'Le cerveau derrière la machine. l\'IA symbolise la connectivité neurale, l\'automatisation intelligente et la progression de l\'intelligence artificielle.',
     logoUrl: 'IA%20Logo.png',
     sketchUrl: 'IA_Sketch.png',
@@ -38,9 +38,9 @@ const LOGOS = [
     id: 'hpda',
     name: 'HPDA',
     fullName: 'High Performance Data Analytics',
-    color: '#8B5CF6',
-    secondaryColor: '#6d28d9',
-    lightColor: '#f3e8ff',
+    color: '#5c3189',
+    secondaryColor: '#4c1d95',
+    lightColor: '#f5f3ff',
     description: 'Transformer les données brutes en informations à haute vitesse. HPDA représente l\'efficacité, la performance et la puissance du traitement des méga-données.',
     logoUrl: 'HPDA%20Logo.png',
     sketchUrl: 'HPDA_Sketch.png',
@@ -53,9 +53,9 @@ const LOGOS = [
     id: 'cs',
     name: 'CS',
     fullName: 'Cyber Security',
-    color: '#F59E0B',
-    secondaryColor: '#b45309',
-    lightColor: '#fef3c7',
+    color: '#db731f',
+    secondaryColor: '#9a3412',
+    lightColor: '#fff7ed',
     description: 'Défendre le périmètre avec des protocoles avancés. CS incarne la confiance, la protection et la force de la sécurité numérique.',
     logoUrl: 'CS%20Logo.png',
     sketchUrl: 'CS_Sketch.png',
@@ -120,9 +120,10 @@ const Modal = ({ isOpen, onClose, logo }) => {
   );
 };
 
-const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
+const Section = ({ logo, setActiveId, onLogoClick }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { amount: 0.5 });
+  const [copiedHex, setCopiedHex] = useState(null);
 
   useEffect(() => {
     if (isInView) {
@@ -212,12 +213,27 @@ const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
                   className="color-ball"
                   style={{ backgroundColor: c.value, color: c.dark ? '#000' : '#fff' }}
                   onClick={() => {
-                    navigator.clipboard.writeText(c.value);
-                    showToast(`Copié : ${c.value}`);
+                    const hex = c.value.toUpperCase();
+                    navigator.clipboard.writeText(hex);
+                    setCopiedHex(hex);
+                    setTimeout(() => setCopiedHex(null), 2000);
                   }}
                 >
+                  <div className={`copy-indicator ${copiedHex === c.value.toUpperCase() ? 'success' : ''}`} style={{ color: c.dark ? '#000' : '#fff' }}>
+                    {copiedHex === c.value.toUpperCase() ? (
+                      <>
+                        <Check size={20} />
+                        <span>Copié</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={20} />
+                        <span>Copier</span>
+                      </>
+                    )}
+                  </div>
                   <span style={{ fontSize: '0.95rem' }}>{c.label}</span>
-                  <code style={{ fontSize: '0.75rem' }}>{c.value}</code>
+                  <code style={{ fontSize: '0.75rem' }}>{c.value.toUpperCase()}</code>
                 </div>
               ))}
             </div>
@@ -256,7 +272,6 @@ const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
 
 export default function App() {
   const [activeId, setActiveId] = useState('home');
-  const [toast, setToast] = useState(null);
   const [selectedLogo, setSelectedLogo] = useState(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 40, damping: 25, restDelta: 0.001 });
@@ -275,10 +290,6 @@ export default function App() {
   const themeColor = activeId === 'home' ? '#1e293b' : (activeLogo?.color || '#3B82F6');
   const glowColor = activeId === 'home' ? '#94a3b8' : (activeLogo?.color || '#3B82F6');
 
-  const showToast = (message) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 2000);
-  };
 
   useEffect(() => {
     document.documentElement.style.setProperty('--primary', themeColor);
@@ -385,7 +396,6 @@ export default function App() {
             key={logo.id}
             logo={logo}
             setActiveId={setActiveId}
-            showToast={showToast}
             onLogoClick={setSelectedLogo}
           />
         ))}
@@ -397,22 +407,10 @@ export default function App() {
         logo={selectedLogo} 
       />
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ y: 50, opacity: 0, x: '-50%' }}
-            animate={{ y: 0, opacity: 1, x: '-50%' }}
-            exit={{ y: 50, opacity: 0, x: '-50%' }}
-            className="copied-feedback"
-          >
-            {toast}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <footer className="footer" style={{ background: 'transparent', padding: '4rem 0' }}>
         <div className="container">
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>© 2025-2026 Abdellatif EL-MAHDAOUI, ING3 ICC. Tous droits réservés.</p>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', textAlign: 'center' }}>© 2025-2026 Abdellatif EL-MAHDAOUI, ING3 ICC. Tous droits réservés.</p>
         </div>
       </footer>
     </div>

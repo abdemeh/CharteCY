@@ -327,6 +327,36 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
+.copy-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.copy-indicator span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.color-ball:hover .copy-indicator,
+.copy-indicator.success {
+  opacity: 1;
+}
+
 .color-ball:hover {
   transform: translateY(-8px) scale(1.02);
 }
