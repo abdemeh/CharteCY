@@ -211,34 +211,30 @@
   height: auto;
 }
 
-.logo-display.clickable {
-  cursor: pointer;
+.logo-display {
   position: relative;
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.logo-display.clickable:hover {
-  transform: scale(1.02) translateY(-5px);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.08);
-}
-
-.view-badge {
+.view-badge.clickable {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  transition: transform 0.3s ease;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.logo-display.clickable:hover .view-badge {
-  transform: scale(1.1) rotate(10deg);
+.view-badge.clickable:hover {
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .guide-info {

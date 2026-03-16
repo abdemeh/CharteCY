@@ -88,10 +88,9 @@ const Modal = ({ isOpen, onClose, logo }) => {
           <div className="modal-body">
             <div className="modal-logo-container" style={{ borderColor: `${logo.color}30` }}>
               <div className="grid-bg"></div>
-              <motion.img 
+              <img 
                 src={logo.logoUrl} 
                 alt={logo.name} 
-                layoutId={`logo-${logo.id}`}
                 className="modal-large-logo"
               />
             </div>
@@ -136,14 +135,16 @@ const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            className="logo-display clickable"
-            onClick={() => onLogoClick(logo)}
+            className="logo-display"
           >
-            <div className="view-badge" style={{ backgroundColor: logo.color }}>
+            <div 
+              className="view-badge clickable" 
+              style={{ backgroundColor: logo.color, cursor: 'pointer' }}
+              onClick={() => onLogoClick(logo)}
+            >
               <Eye size={14} color="white" />
             </div>
-            <motion.img 
-              layoutId={`logo-${logo.id}`}
+            <img 
               src={logo.logoUrl} 
               alt={logo.name} 
             />
