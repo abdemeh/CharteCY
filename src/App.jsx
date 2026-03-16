@@ -13,6 +13,7 @@ const LOGOS = [
     lightColor: '#e0f2fe',
     description: 'Conçu pour l\'avenir de l\'infrastructure cloud. ICC représente l\'évolutivité, la fiabilité et la puissance informatique moderne.',
     logoUrl: 'ICC%20Logo.png',
+    sketchUrl: 'ICC_Sketch.png',
     features: ['Évolutivité', 'Architecture Cloud', 'Fiabilité'],
     meaning: "Le bleu évoque la profondeur de l'infrastructure et la stabilité des systèmes critiques.",
     emotion: "Confiance, Innovation, Sérénité technique",
@@ -27,6 +28,7 @@ const LOGOS = [
     lightColor: '#dcfce7',
     description: 'Le cerveau derrière la machine. l\'IA symbolise la connectivité neurale, l\'automatisation intelligente et la progression de l\'intelligence artificielle.',
     logoUrl: 'IA%20Logo.png',
+    sketchUrl: 'IA_Sketch.png',
     features: ['Apprentissage Profond', 'Réseaux Neuraux', 'Automatisation'],
     meaning: "Le vert symbolise la croissance algorithmique et l'équilibre entre nature et technologie.",
     emotion: "Intelligence, Croissance, Harmonie futuriste",
@@ -41,6 +43,7 @@ const LOGOS = [
     lightColor: '#f3e8ff',
     description: 'Transformer les données brutes en informations à haute vitesse. HPDA représente l\'efficacité, la performance et la puissance du traitement des méga-données.',
     logoUrl: 'HPDA%20Logo.png',
+    sketchUrl: 'HPDA_Sketch.png',
     features: ['Big Data', 'Haute Efficacité', 'Analyses en Temps Réel'],
     meaning: "Le violet représente la complexité transformée en sagesse et la puissance de calcul.",
     emotion: "Ambition, Créativité, Excellence analytique",
@@ -55,6 +58,7 @@ const LOGOS = [
     lightColor: '#fef3c7',
     description: 'Défendre le périmètre avec des protocoles avancés. CS incarne la confiance, la protection et la force de la sécurité numérique.',
     logoUrl: 'CS%20Logo.png',
+    sketchUrl: 'CS_Sketch.png',
     features: ['Chiffrement', 'Protection Contre les Menaces', 'Confiance'],
     meaning: "L'ambre incarne l'alerte préventive, la chaleur de la protection et la vigilance.",
     emotion: "Vigilance, Sécurité, Énergie protectrice",
@@ -231,22 +235,7 @@ const Section = ({ logo, setActiveId, showToast, onLogoClick }) => {
               <h3>Visualisation de Construction</h3>
             </div>
             <div className="construction-preview">
-              <div className="grid-bg"></div>
-
-              {/* Technical Lines */}
-              <div className="technical-line horizontal" style={{ top: '35%', background: logo.color }}></div>
-              <div className="technical-line horizontal" style={{ top: '65%', background: logo.color }}></div>
-              <div className="technical-line vertical" style={{ left: '35%', background: logo.color }}></div>
-              <div className="technical-line vertical" style={{ left: '65%', background: logo.color }}></div>
-
-              <div className="analysis-annotations">
-                <span className="annotation top-left" style={{ borderColor: logo.color }}>R: Variable</span>
-                <span className="annotation bottom-right" style={{ borderColor: logo.color }}>Grid: 8px</span>
-              </div>
-
-              <img src={logo.logoUrl} alt="Grid" style={{ width: '130px', zIndex: 1, position: 'relative' }} />
-
-              <div className="center-cross" style={{ background: logo.color }}></div>
+              <img src={logo.sketchUrl} alt="Sketch" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
             <div className="analysis-text-box" style={{ marginTop: '1.25rem' }}>
